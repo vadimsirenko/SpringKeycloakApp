@@ -1,0 +1,50 @@
+jwt:
+  auth:
+    converter:
+      resource-id: book_store
+      principal-attribute: preferred_username
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+
+server:
+  port: '8989'
+  #servlet:
+    #context-path: /api
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/security_app_db
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  messages:
+    encoding: "UTF-8"
+    basename: "i18n/messages" # directory with messages_XX.properties
+    use-code-as-default-message: true
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+      temp:
+        use_jdbc_metadata_defaults: false
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            client-id: book_store
+            client-secret: P@ssw0rdP@ssw0rdP@ssw0rd
+            authorization-grant-type: authorization_code
+            scope: openid,roles,profile
+        provider:
+          keycloak:
+            issuer-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}
+            user-name-attribute: preferred_username
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8888/realms/Demo
+          jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
