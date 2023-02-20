@@ -11,6 +11,8 @@
 <br />
 <a th:href="@{/}">Домой</a>
 <hr />
-<a href="/logout">Logout</a>
+<form method="POST" th:action="@{/logout}">
+    <input type="submit" value="Logout"/>
+</form>
 </body>
 </html>
