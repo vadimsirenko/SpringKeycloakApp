@@ -18,12 +18,15 @@ public class EmployeeService {
 
     @PostConstruct
     public void initializeEmployeeTable() {
-        employeeRepository.saveAll(
-                Stream.of(
-                        new Employee("john", 20000),
-                        new Employee("mak", 55000),
-                        new Employee("peter", 120000)
-                ).collect(Collectors.toList()));
+        long employeeCount = employeeRepository.count();
+        if(employeeCount == 0) {
+            employeeRepository.saveAll(
+                    Stream.of(
+                            new Employee("john", 20000),
+                            new Employee("mak", 55000),
+                            new Employee("peter", 120000)
+                    ).collect(Collectors.toList()));
+        }
     }
 
     public Employee getEmployee(int employeeId) {

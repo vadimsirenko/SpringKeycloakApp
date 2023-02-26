@@ -1,7 +1,5 @@
 package ru.vasire.keycloak.controller;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,11 +32,11 @@ public class TestController {
         String userEmail = (String) token.getTokenAttributes().get("email");
         return ResponseEntity.ok("Hello User \nUser Name : " + userName + "\nUser Email : " + userEmail);
     }
-
+/*
     @GetMapping(path = "/logout")
     public String logout(HttpServletRequest request) throws ServletException {
         request.logout();
         return "redirect:/";
     }
-
+*/
 }
