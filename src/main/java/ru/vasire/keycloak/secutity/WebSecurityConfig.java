@@ -1,7 +1,6 @@
 package ru.vasire.keycloak.secutity;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -16,10 +15,8 @@ import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.oauth2.core.oidc.user.OidcUserAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2UserAuthority;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.logout.*;
 import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
-
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -49,10 +46,11 @@ public class WebSecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/test/anonymous", "/api/test/anonymous/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/test/admin", "/api/test/admin/**").hasRole(BOOK_REGISTER)
                 .requestMatchers(HttpMethod.GET, "/api/test/user").hasAnyRole(BOOK_REGISTER, BOOK_READER)
-                .requestMatchers(HttpMethod.GET, "/info").hasAnyRole(ADMIN, USER)
+                .requestMatchers(HttpMethod.GET, "/info", "/").hasAnyRole(ADMIN, USER)
+                .requestMatchers(HttpMethod.GET, "/admin").hasAnyRole(ADMIN)
                 .requestMatchers(HttpMethod.GET, "/employee").hasAnyRole(BOOK_REGISTER)
                 .requestMatchers(HttpMethod.GET, "/employee/*").hasAnyRole(BOOK_REGISTER, BOOK_READER)
-                .requestMatchers(HttpMethod.GET, "/**").hasAnyRole(USER)
+                .requestMatchers(HttpMethod.GET, "/**").hasAnyRole(USER, ADMIN)
                 .anyRequest().authenticated()
                 .and()
                 .oauth2Login()
