@@ -22,14 +22,14 @@ public class EmployeeController {
 
     //this method can be accessed by user whose role is user
     @GetMapping("/{employeeId}")
-    @RolesAllowed("user")
+    //@RolesAllowed("user")
     public ResponseEntity<Employee> getEmployee(@PathVariable int employeeId) {
         return ResponseEntity.ok(service.getEmployee(employeeId));
     }
 
     //this method can be accessed by user whose role is admin
     @GetMapping
-    @RolesAllowed("admin")
+    //@RolesAllowed("admin")
     public ResponseEntity<List<Employee>> findALlEmployees() {
         return ResponseEntity.ok(service.getAllEmployees());
     }

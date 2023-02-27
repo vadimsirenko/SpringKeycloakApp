@@ -50,7 +50,7 @@ public class WebSecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/test/admin", "/api/test/admin/**").hasRole(BOOK_REGISTER)
                 .requestMatchers(HttpMethod.GET, "/api/test/user").hasAnyRole(BOOK_REGISTER, BOOK_READER)
                 .requestMatchers(HttpMethod.GET, "/info").hasAnyRole(ADMIN, USER)
-                .requestMatchers(HttpMethod.GET, "/employee/admin").hasAnyRole(BOOK_REGISTER)
+                .requestMatchers(HttpMethod.GET, "/employee").hasAnyRole(BOOK_REGISTER)
                 .requestMatchers(HttpMethod.GET, "/employee/*").hasAnyRole(BOOK_REGISTER, BOOK_READER)
                 .requestMatchers(HttpMethod.GET, "/**").hasAnyRole(USER)
                 .anyRequest().authenticated()
