@@ -1,6 +1,8 @@
 package ru.vasire.keycloak.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
@@ -9,9 +11,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import ru.vasire.keycloak.model.Employee;
+
+import java.util.function.Predicate;
 
 import static org.hibernate.query.sqm.tree.SqmNode.log;
 
@@ -48,13 +53,27 @@ public class HomeController {
     {
         Mono<Employee[]> response  = employeeClient.build().get().uri("http://localhost:8989/employee")
                 .header("Authorization", "Bearer " + authorizedClient.getAccessToken().getTokenValue())
-                .retrieve()
-                .bodyToMono(Employee[].class)
-                .doOnError(error -> log.errorf("An error has occurred {s}", error.getMessage()))
-                .log();
+                .exchangeToMono(result -> {
+                    if (result.statusCode()
+                            .equals(HttpStatus.OK)) {
+                        return result.bodyToMono(Employee[].class);
+                    } else if (result.statusCode().isError()) {
+                        return result.createException().flatMap( Mono::error );
+                    }
+                    return null;
+                });
 
-        var epmList = response.block();
+        Employee[] epmList = new Employee[0];
+        String error = "";
+        try{
+            epmList = response.block();
+        }
+        catch (Exception ex){
+            log.error(ex);
+            error = ex.getMessage();
+        }
         model.addAttribute("employees", epmList);
+        model.addAttribute("error", error);
         return "employee";
     }
 }

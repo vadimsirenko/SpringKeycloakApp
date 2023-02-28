@@ -9,6 +9,7 @@
 <div th:each="employee : ${employees}">
     <ul th:text="${employee.getName() +', '+ employee.getSalary()}">employee</ul>
 </div>
+<div style="color:red" th:if="${error != ''}" th:text="${error}">Error</div>
 <br />
 <a th:href="@{/info}">Информация</a>
 <hr />
