@@ -32,12 +32,4 @@ public class TestController {
         String userEmail = (String) token.getTokenAttributes().get("email");
         return ResponseEntity.ok("Hello User \nUser Name : " + userName + "\nUser Email : " + userEmail);
     }
-/*
-    @GetMapping(path = "/logout")
-    public String logout(HttpServletRequest request) throws ServletException {
-        request.logout();
-        return "redirect:/";
-    }
-*/
-
 }

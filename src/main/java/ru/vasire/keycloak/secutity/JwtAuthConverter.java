@@ -1,5 +1,6 @@
 package ru.vasire.keycloak.secutity;
 
+import lombok.NonNull;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -28,7 +29,7 @@ public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationTo
     }
 
     @Override
-    public AbstractAuthenticationToken convert(Jwt jwt) {
+    public AbstractAuthenticationToken convert(@NonNull Jwt jwt) {
         Collection<GrantedAuthority> authorities = Stream.concat(
                 jwtGrantedAuthoritiesConverter.convert(jwt).stream(),
                 extractResourceRoles(jwt).stream()).collect(Collectors.toSet());
@@ -45,15 +46,15 @@ public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationTo
 
     private Collection<? extends GrantedAuthority> extractResourceRoles(Jwt jwt) {
         Map<String, Object> resourceAccess = jwt.getClaim("resource_access");
-        Map<String, Object> resource;
-        Collection<String> resourceRoles;
-        if (resourceAccess == null
-                || (resource = (Map<String, Object>) resourceAccess.get(properties.getResourceId())) == null
-                || (resourceRoles = (Collection<String>) resource.get("roles")) == null) {
-            return Set.of();
+        if (resourceAccess != null){
+            if  (resourceAccess.get(properties.getResourceId()) instanceof Map<?, ?> resource){
+                if(resource.get("roles") instanceof Collection<?> resourceRoles){
+                    return resourceRoles.stream()
+                            .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
+                            .collect(Collectors.toSet());
+                }
+            }
         }
-        return resourceRoles.stream()
-                .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
-                .collect(Collectors.toSet());
+        return Set.of();
     }
 }

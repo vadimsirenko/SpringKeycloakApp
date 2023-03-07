@@ -1,7 +1,7 @@
 package ru.vasire.keycloak.controller;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,10 +14,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/employee")
+@RequiredArgsConstructor
 public class EmployeeController {
 
-    @Autowired
-    private EmployeeService service;
+    private final EmployeeService service;
 
     //this method can be accessed by user whose role is user
     @GetMapping("/{employeeId}")

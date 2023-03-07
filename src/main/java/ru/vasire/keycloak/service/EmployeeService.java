@@ -1,7 +1,7 @@
 package ru.vasire.keycloak.service;
 
 import jakarta.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.vasire.keycloak.model.Employee;
 import ru.vasire.keycloak.repository.EmployeeRepository;
@@ -11,10 +11,10 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
+@RequiredArgsConstructor
 public class EmployeeService {
 
-    @Autowired
-    private EmployeeRepository employeeRepository;
+    private final EmployeeRepository employeeRepository;
 
     @PostConstruct
     public void initializeEmployeeTable() {
